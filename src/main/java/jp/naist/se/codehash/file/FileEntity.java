@@ -34,6 +34,7 @@ public class FileEntity {
 	private int ngramCount;
 	private StringMultiset ngrams;
 	private StringMultiset normalizedNgrams;
+	private StringMultiset pMatchNgrams;
 	private MinHashEntry minhashEntry;
 	
 	/**
@@ -83,6 +84,7 @@ public class FileEntity {
 			ngramCount = h.getNgramCount();
 			ngrams = h.getNgramMultiset();
 			normalizedNgrams = h.getNormalizedNgramMultiset();
+			pMatchNgrams = h.getPMatchNgramMultiset();
 			tokenLength = tokenReader.getTokenCount();
 
 			minhashEntry = new MinHashEntry(path, filehash, getLanguageName(), codehash, minhash, normalizedMinhash, byteLength, tokenLength, ngramCount);
@@ -142,7 +144,11 @@ public class FileEntity {
 	public StringMultiset getNormalizedNgramMultiset() {
 		return normalizedNgrams;
 	}
-	
+
+	public StringMultiset getPMatchNgramMultiset() {
+		return pMatchNgrams;
+	}
+
 	public double estimateNormalizedSimilarity(FileEntity another) {
 		return this.minhashEntry.estimateNormalizedSimilarity(another.minhashEntry);
 	}

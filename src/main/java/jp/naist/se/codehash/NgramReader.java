@@ -8,10 +8,12 @@ public class NgramReader {
 	private TokenReader reader;
 	private String[] tokens;
 	private String[] normalizedTokens;
+	private String[] pMatchTokens;
 	
 	public NgramReader(int N, TokenReader reader) {
 		this.tokens = new String[N];
 		this.normalizedTokens = new String[N];
+		this.pMatchTokens = new String[N];
 		this.reader = reader;
 	}
 	
@@ -30,6 +32,7 @@ public class NgramReader {
 		for (int i=0; i<tokens.length-1; ++i) {
 			tokens[i] = tokens[i+1];
 			normalizedTokens[i] = normalizedTokens[i+1];
+			pMatchTokens[i] = pMatchTokens[i+1];
 			if (tokens[i] != null) hasElement = true;
 		}
 			
@@ -37,10 +40,12 @@ public class NgramReader {
 		if (reader.next()) {
 			tokens[tokens.length-1] = reader.getText();
 			normalizedTokens[normalizedTokens.length-1] = reader.getNormalizedText();
+			pMatchTokens[pMatchTokens.length-1] = reader.getPMatchNormalizedText();
 			hasElement = true;
 		} else {
 			tokens[tokens.length-1] = null;
 			normalizedTokens[normalizedTokens.length-1] = null;
+			pMatchTokens[pMatchTokens.length-1] = null;
 		}
 		
 		if (hasElement) ngramCount++;
@@ -62,6 +67,10 @@ public class NgramReader {
 	 */
 	public String getNormalizedToken(int i) {
 		return normalizedTokens[i];
+	}
+
+	public String getPMatchToken(int i) {
+		return pMatchTokens[i];
 	}
 	
 	/**

@@ -39,10 +39,13 @@ public class DirectComparisonMain {
 
 	private static final String METRIC_JACCARD_DISTANCE_WITHOUT_NORMALIZATION = "exact-jaccard";
 	private static final String METRIC_JACCARD_DISTANCE = "jaccard";
+	private static final String METRIC_JACCARD_DISTANCE_WITH_PMATCH = "pmatch-jaccard";
 	private static final String METRIC_OVERLAP_COEFFICIENT = "overlap-coefficient";
 	private static final String METRIC_OVERLAP_COEFFICIENT_WITHOUT_NORMALIZATION = "exact-overlap-coefficient";
+	private static final String METRIC_OVERLAP_COEFFICIENT_WITH_PMATCH = "pmatch-overlap-coefficient";
 	private static final String METRIC_OVERLAP_SIMILARITY = "overlap-similarity";
 	private static final String METRIC_OVERLAP_SIMILARITY_WITHOUT_NORMALIZATION = "exact-overlap-similarity";
+	private static final String METRIC_OVERLAP_SIMILARITY_WITH_PMATCH = "pmatch-overlap-similarity";
 	
 	
 	/**
@@ -73,6 +76,9 @@ public class DirectComparisonMain {
 	private boolean useJaccard = true;
 	private boolean useOverlapSimilarity = true;
 	private boolean useOverlapCoefficient = true;
+	private boolean usePMatchJaccard = true;
+	private boolean usePMatchOverlapSimilarity = true;
+	private boolean usePMatchOverlapCoefficient = true;
 
 	public DirectComparisonMain(String[] args) {
 		FileGroup defaultGroup = null;
@@ -120,6 +126,9 @@ public class DirectComparisonMain {
 				useJaccard = metricNames.contains(METRIC_JACCARD_DISTANCE);
 				useOverlapCoefficient = metricNames.contains(METRIC_OVERLAP_COEFFICIENT);
 				useOverlapSimilarity = metricNames.contains(METRIC_OVERLAP_SIMILARITY);
+				usePMatchJaccard = metricNames.contains(METRIC_JACCARD_DISTANCE_WITH_PMATCH);
+				usePMatchOverlapCoefficient = metricNames.contains(METRIC_OVERLAP_COEFFICIENT_WITH_PMATCH);
+				usePMatchOverlapSimilarity = metricNames.contains(METRIC_OVERLAP_SIMILARITY_WITH_PMATCH);
 			} else if (s.equals(COMPARE_CRSOS_GROUP)) {
 				compareGroups = true;
 //			} else if (s.startsWith(FILENAME_SELECTOR)) {
@@ -340,6 +349,20 @@ public class DirectComparisonMain {
 		if (useOverlapSimilarity) {
 			double overlapSimialrity = intersection * 1.0 / Math.max(e1.getNgramCount(), e2.getNgramCount());
 			sim.add(METRIC_OVERLAP_SIMILARITY, overlapSimialrity);
+		}
+
+		intersection = e1.getPMatchNgramMultiset().intersection(e2.getPMatchNgramMultiset());
+		if (usePMatchJaccard) {
+			double pmatchNormalizedJaccard = intersection * 1.0 / (e1.getNgramCount() + e2.getNgramCount() - intersection);
+			sim.add(METRIC_JACCARD_DISTANCE_WITH_PMATCH, pmatchNormalizedJaccard);
+		}
+		if (usePMatchOverlapCoefficient) {
+			double pmatchOverlapCoefficient = intersection * 1.0 / Math.min(e1.getNgramCount(), e2.getNgramCount());
+			sim.add(METRIC_OVERLAP_COEFFICIENT_WITH_PMATCH, pmatchOverlapCoefficient);
+		}
+		if (usePMatchOverlapSimilarity) {
+			double pmatchOverlapSimilarity = intersection * 1.0 / Math.max(e1.getNgramCount(), e2.getNgramCount());
+			sim.add(METRIC_OVERLAP_SIMILARITY_WITH_PMATCH, pmatchOverlapSimilarity);
 		}
 
 		// Temporarily disabled 

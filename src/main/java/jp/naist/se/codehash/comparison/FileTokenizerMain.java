@@ -54,6 +54,7 @@ public class FileTokenizerMain {
 							gen.writeNumberField("TokenType", r.getTokenType());
 							gen.writeStringField("Text", r.getText());
 							gen.writeStringField("NormalizedText", r.getNormalizedText());
+							gen.writeStringField("PMatchNormalizedText", r.getPMatchNormalizedText());
 							gen.writeNumberField("Line", r.getLine());
 							gen.writeNumberField("CharPositionInLine", r.getCharPositionInLine());
 							gen.writeEndObject();

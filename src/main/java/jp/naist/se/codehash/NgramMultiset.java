@@ -7,10 +7,12 @@ public class NgramMultiset {
 	private int ngramCount;
 	private StringMultiset regular;
 	private StringMultiset normalized;
+	private StringMultiset pMatch;
 	
 	public NgramMultiset(NgramReader ngramReader) {
 		regular = new StringMultiset(2048);
 		normalized = new StringMultiset(2048);
+		pMatch = new StringMultiset(2048);
 		
 		while (ngramReader.next()) {
 			// Calculate a hash for the N-gram 
@@ -36,6 +38,19 @@ public class NgramMultiset {
 				builder.append((char)0);
 			}
 			normalized.add(builder.toString());
+
+			// Calculate a hash for the N-gram 
+			builder = new StringBuilder(128);
+			for (int i=0; i<ngramReader.getN(); i++) {
+				if (ngramReader.getPMatchToken(i) != null) {
+					builder.append(ngramReader.getPMatchToken(i));
+				} else {
+					builder.append((char)i);
+				}
+				builder.append((char)0);
+			}
+			pMatch.add(builder.toString());
+
 		}
 		
 		ngramCount = ngramReader.getNgramCount();
@@ -47,6 +62,10 @@ public class NgramMultiset {
 	
 	public StringMultiset getNormalized() {
 		return normalized;
+	}
+
+	public StringMultiset getPMatch() {
+		return pMatch;
 	}
 	
 	public int getNgramCount() {

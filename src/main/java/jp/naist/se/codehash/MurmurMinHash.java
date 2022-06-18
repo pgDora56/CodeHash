@@ -158,4 +158,7 @@ public class MurmurMinHash {
 		return ngramMultiset.getNormalized();
 	}
 
+	public StringMultiset getPMatchNgramMultiset() {
+		return ngramMultiset.getPMatch();
+	}
 }

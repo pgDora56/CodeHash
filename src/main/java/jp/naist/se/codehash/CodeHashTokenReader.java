@@ -46,6 +46,11 @@ public class CodeHashTokenReader implements TokenReader {
 	public String getNormalizedText() {
 		return parent.getNormalizedText();
 	}
+	
+	@Override
+	public String getPMatchNormalizedText() {
+		return parent.getPMatchNormalizedText();
+	}
 
 	@Override
 	public int getCharPositionInLine() {

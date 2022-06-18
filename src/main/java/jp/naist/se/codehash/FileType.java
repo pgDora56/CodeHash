@@ -17,6 +17,7 @@ import jp.naist.se.codehash.normalizer.ECMAScriptNormalizer;
 import jp.naist.se.codehash.normalizer.Java8Normalizer;
 import jp.naist.se.codehash.normalizer.Normalizer;
 import jp.naist.se.codehash.normalizer.Python3Normalizer;
+import jp.naist.se.codehash.pmatch.Python3PMatchNormalizer;
 import jp.naist.se.commentlister.lexer.CPP14Lexer;
 import jp.naist.se.commentlister.lexer.CSharpLexer;
 import jp.naist.se.commentlister.lexer.ECMAScriptLexer;
@@ -105,7 +106,7 @@ public enum FileType {
 					public boolean accept(Token t) {
 						return t.getChannel() != Java8Lexer.HIDDEN;
 					}
-				}, new Java8Normalizer());
+				}, new Java8Normalizer(), null);
 			}
 			case CPP:
 			{
@@ -117,7 +118,7 @@ public enum FileType {
 					public boolean accept(Token t) {
 						return t.getChannel() != CPP14Lexer.HIDDEN;
 					}
-				}, new CPP14Normalizer());
+				}, new CPP14Normalizer(), null);
 			}
 			case ECMASCRIPT:
 			{
@@ -127,7 +128,7 @@ public enum FileType {
 					public boolean accept(Token t) {
 						return t.getChannel() != ECMAScriptLexer.HIDDEN;
 					}
-				}, new ECMAScriptNormalizer());
+				}, new ECMAScriptNormalizer(), null);
 			}
 			case PYTHON:
 			{
@@ -144,7 +145,7 @@ public enum FileType {
 								t.getChannel() != PhpLexer.SkipChannel &&
 								t.getChannel() != PhpLexer.ErrorLexem;
 					}
-				}, null);
+				}, null, null);
 			}
 			case CSHARP:
 			{
@@ -155,7 +156,7 @@ public enum FileType {
 						return (t.getChannel() != CSharpLexer.HIDDEN) &&
 								(t.getChannel() != CSharpLexer.COMMENTS_CHANNEL);
 					}
-				}, new CSharpNormalizer());
+				}, new CSharpNormalizer(), null);
 			}
 			default:
 				return null;
@@ -176,7 +177,7 @@ public enum FileType {
 							//(t.getType() != Python3Parser.INDENT) &&
 							//(t.getType() != Python3Parser.DEDENT);
 				}
-			}, new Python3Normalizer());
+			}, new Python3Normalizer(), new Python3PMatchNormalizer());
 		}
 		/**
 		 * Overriding tokens 
@@ -198,6 +199,15 @@ public enum FileType {
 				return "<DEDENT>";
 			}
 			return super.getNormalizedText();
+		}
+		@Override
+		public String getPMatchNormalizedText() {
+			if (getTokenType() == Python3Parser.INDENT) {
+				return "<INDENT>";
+			} else if (getTokenType() == Python3Parser.DEDENT) {
+				return "<DEDENT>";
+			}
+			return super.getPMatchNormalizedText();
 		}
 	}
 

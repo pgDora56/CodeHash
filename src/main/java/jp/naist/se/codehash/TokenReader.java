@@ -22,6 +22,11 @@ public interface TokenReader {
 	 * @return a normalized text of the current token. 
 	 */
 	public String getNormalizedText();
+
+	/**
+	 * @return a normalized text of the current token using P-Match. 
+	 */
+	public String getPMatchNormalizedText();
 	
 	/**
 	 * @return the line of the current token.

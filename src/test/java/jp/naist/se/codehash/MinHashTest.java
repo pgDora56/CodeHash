@@ -133,6 +133,11 @@ public class MinHashTest {
 		public String getNormalizedText() {
 			return "$p";
 		}
+
+		@Override
+		public String getPMatchNormalizedText() {
+			return "$p";
+		}
 		
 		@Override
 		public int getLine() {
